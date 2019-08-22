@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Duke {
     public static void main(String[] args) {
@@ -14,32 +16,40 @@ public class Duke {
         chatbot();
     }
 
-    public static void chatbot() {
+    private static void chatbot() {
         boolean exitCondition = false;
         Scanner scanner = new Scanner(System.in);
-        String[] createlist = new String[100];
+        ArrayList<Task> list = new ArrayList<>();
         int items = 0;
 
         while (!exitCondition) {
             String string = scanner.nextLine();
+            System.out.println("________________________________________");
+
             if (string.equals("bye")) {
                 exitCondition = true;
-                System.out.println("________________________________________");
                 System.out.println("    Bye. Hope to see you again soon!");
-                System.out.println("________________________________________");
             } else if (string.equals("list")) {
-                System.out.println("________________________________________");
+                System.out.println("    Here are the tasks in your list:");
                 for (int i = 0; i < items; i++) {
-                    System.out.println("    "+ (i+1) +". "+createlist[i]);
+                    System.out.println("    "+ (i+1) + ". [" + list.get(i).getStatusIcon()+"] "
+                            + list.get(i).description);
                 }
-                System.out.println("________________________________________");
             } else {
-                createlist[items] = string;
-                items++;
-                System.out.println("________________________________________");
-                System.out.println("    added: "+string);
-                System.out.println("________________________________________");
+                StringTokenizer tokenizer = new StringTokenizer(string);
+                if (tokenizer.nextToken().equals("done")) {
+                    int item = Integer.parseInt(tokenizer.nextToken());
+                    list.get(item-1).markAsDone();
+                    System.out.println("    Nice! I've marked this task as done:");
+                    System.out.println("      [\u2713] " + list.get(item-1).description);
+                } else {
+                    items++;
+                    Task task = new Task(string);
+                    list.add(task);
+                    System.out.println("    added: "+string);
+                }
             }
+            System.out.println("________________________________________");
         }
     }
 }
