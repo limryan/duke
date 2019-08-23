@@ -43,6 +43,10 @@ public class Duke {
                     }
                     break;
                 case "todo":
+                    if (description == null) {
+                        System.out.println("    OOPS!!! The description of a todo cannot be empty.");
+                        break;
+                    }
                     list[items] = new Todo(description.substring(1));
                     System.out.println("    Got it. I've added this task:\n" + "      "
                             + list[items].toString());
@@ -50,6 +54,10 @@ public class Duke {
                     System.out.println("    Now you have " + items + " task(s) in the list.");
                     break;
                 case "deadline":
+                    if (description == null || date == null) {
+                        System.out.println("    OOPS!!! The description/date of a deadline cannot be empty.");
+                        break;
+                    }
                     list[items] = new Deadline(description.substring(1), date.substring(4));
                     System.out.println("    Got it. I've added this task:\n" + "      "
                             + list[items].toString());
@@ -57,6 +65,10 @@ public class Duke {
                     System.out.println("    Now you have " + items + " task(s) in the list.");
                     break;
                 case "event":
+                    if (description == null || date == null) {
+                        System.out.println("    OOPS!!! The description/date of an event cannot be empty.");
+                        break;
+                    }
                     list[items] = new Event(description.substring(1), date.substring(4));
                     System.out.println("    Got it. I've added this task:\n" + "      "
                             + list[items].toString());
@@ -69,6 +81,8 @@ public class Duke {
                     System.out.println("    Nice! I've marked this task as done:");
                     System.out.println("      [\u2713] " + list[item - 1].description);
                     break;
+                default:
+                    System.out.println("    OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
             System.out.println("________________________________________");
         }
