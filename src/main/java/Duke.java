@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -18,7 +19,7 @@ public class Duke {
     private static void chatbot() {
         boolean exitCondition = false;
         Scanner scanner = new Scanner(System.in);
-        Task[] list = new Task[100];
+        ArrayList<Task> list = new ArrayList<>();
         int items = 0;
 
         while (!exitCondition) {
@@ -39,47 +40,53 @@ public class Duke {
                 case "list":
                     System.out.println("    Here are the tasks in your list:");
                     for (int i = 0; i < items; i++) {
-                        System.out.println("    " + (i + 1) + ". " + list[i].toString());
+                        System.out.println("    " + (i + 1) + ". " + list.get(i).toString());
                     }
                     break;
                 case "todo":
-                    if (description == null) {
+                    try {
+                        list.add(new Todo(description.substring(1)));
+                        System.out.println("    Got it. I've added this task:\n" + "      "
+                                + list.get(items).toString());
+                        items++;
+                        System.out.println("    Now you have " + items + " task(s) in the list.");
+                    } catch (NullPointerException e) {
                         System.out.println("    OOPS!!! The description of a todo cannot be empty.");
-                        break;
                     }
-                    list[items] = new Todo(description.substring(1));
-                    System.out.println("    Got it. I've added this task:\n" + "      "
-                            + list[items].toString());
-                    items++;
-                    System.out.println("    Now you have " + items + " task(s) in the list.");
                     break;
                 case "deadline":
-                    if (description == null || date == null) {
+                    try {
+                        list.add(new Deadline(description.substring(1), date.substring(4)));
+                        System.out.println("    Got it. I've added this task:\n" + "      "
+                                + list.get(items).toString());
+                        items++;
+                        System.out.println("    Now you have " + items + " task(s) in the list.");
+                    } catch (NullPointerException e) {
                         System.out.println("    OOPS!!! The description/date of a deadline cannot be empty.");
-                        break;
                     }
-                    list[items] = new Deadline(description.substring(1), date.substring(4));
-                    System.out.println("    Got it. I've added this task:\n" + "      "
-                            + list[items].toString());
-                    items++;
-                    System.out.println("    Now you have " + items + " task(s) in the list.");
                     break;
                 case "event":
-                    if (description == null || date == null) {
+                    try {
+                        list.add(new Event(description.substring(1), date.substring(4)));
+                        System.out.println("    Got it. I've added this task:\n" + "      "
+                                + list.get(items).toString());
+                        items++;
+                        System.out.println("    Now you have " + items + " task(s) in the list.");
+                    } catch (NullPointerException e) {
                         System.out.println("    OOPS!!! The description/date of an event cannot be empty.");
-                        break;
                     }
-                    list[items] = new Event(description.substring(1), date.substring(4));
-                    System.out.println("    Got it. I've added this task:\n" + "      "
-                            + list[items].toString());
-                    items++;
-                    System.out.println("    Now you have " + items + " task(s) in the list.");
                     break;
                 case "done":
-                    int item = Integer.parseInt(description.substring(1));
-                    list[item - 1].markAsDone();
-                    System.out.println("    Nice! I've marked this task as done:");
-                    System.out.println("      [\u2713] " + list[item - 1].description);
+                    try {
+                        int item = Integer.parseInt(description.substring(1));
+                        list.get(item - 1).markAsDone();
+                        System.out.println("    Nice! I've marked this task as done:");
+                        System.out.println("      [\u2713] " + list.get(item - 1).description);
+                    } catch (NullPointerException e) {
+                        System.out.println("    OOPS!!! Please enter an item number.");
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("    OOPS!!! Item not found.");
+                    }
                     break;
                 default:
                     System.out.println("    OOPS!!! I'm sorry, but I don't know what that means :-(");
