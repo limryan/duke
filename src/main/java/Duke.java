@@ -1,5 +1,4 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -81,7 +80,12 @@ public class Duke {
 
     private static void CreateDeadline(ArrayList<Task> list, boolean markAsDone, String description, String date) {
         try {
-            list.add(new Deadline(description.trim(), date.trim().substring(4)));
+            StringTokenizer stringTokenizer = new StringTokenizer(date.trim().substring(4));
+            int day = Integer.parseInt(stringTokenizer.nextToken("/").trim());
+            int month = Integer.parseInt(stringTokenizer.nextToken("/").trim());
+            int year = Integer.parseInt(stringTokenizer.nextToken("/ "));
+            int time = Integer.parseInt(stringTokenizer.nextToken("\n").trim());
+            list.add(new Deadline(description.trim(), day, month, year, time));
             WriteToFile(list);
             System.out.println("    Got it. I've added this task:\n" + "      "
                     + list.get(Task.totalItems-1).toString());
@@ -95,7 +99,12 @@ public class Duke {
 
     private static void CreateEvent(ArrayList<Task> list, boolean markAsDone, String description, String date) {
         try {
-            list.add(new Event(description.trim(), date.trim().substring(4)));
+            StringTokenizer stringTokenizer = new StringTokenizer(date.trim().substring(4));
+            int day = Integer.parseInt(stringTokenizer.nextToken("/").trim());
+            int month = Integer.parseInt(stringTokenizer.nextToken("/").trim());
+            int year = Integer.parseInt(stringTokenizer.nextToken("/ "));
+            int time = Integer.parseInt(stringTokenizer.nextToken("\n").trim());
+            list.add(new Event(description.trim(), day, month, year, time));
             WriteToFile(list);
             System.out.println("    Got it. I've added this task:\n" + "      "
                     + list.get(Task.totalItems-1).toString());
@@ -118,12 +127,15 @@ public class Duke {
         try {
             int item = Integer.parseInt(description.trim());
             list.get(item - 1).markAsDone();
+            WriteToFile(list);
             System.out.println("    Nice! I've marked this task as done:");
             System.out.println("      [\u2713] " + list.get(item - 1).description);
         } catch (NullPointerException | NumberFormatException e) {
             System.out.println("    OOPS!!! Please enter an item number.");
         } catch (IndexOutOfBoundsException e) {
             System.out.println("    OOPS!!! Item not found.");
+        } catch (IOException e) {
+            System.out.println("    Error. File not found.");
         }
     }
 
@@ -133,12 +145,12 @@ public class Duke {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         for (int i = 0; i < Task.totalItems; i++) {
             if (list.get(i) instanceof Todo) {
-                bufferedWriter.write("T | " + list.get(i).isDone + " | " + list.get(i).description + " | \n");
+                bufferedWriter.write("T | " + list.get(i).getStatusIcon() + " | " + list.get(i).description + " | \n");
             } else if (list.get(i) instanceof Deadline) {
-                bufferedWriter.write("D | " + list.get(i).isDone + " | " + list.get(i).description + " | "
+                bufferedWriter.write("D | " + list.get(i).getStatusIcon() + " | " + list.get(i).description + " | "
                         + list.get(i).date() + "\n");
             } else {
-                bufferedWriter.write("E | " + list.get(i).isDone + " | " + list.get(i).description + " | "
+                bufferedWriter.write("E | " + list.get(i).getStatusIcon() + " | " + list.get(i).description + " | "
                         + list.get(i).date() + "\n");
             }
         }
@@ -154,18 +166,26 @@ public class Duke {
                 String event = tokenizer.nextToken();
                 String Done = tokenizer.nextToken();
                 String description = tokenizer.nextToken();
-                String date = tokenizer.nextToken("\n");
+                String date = tokenizer.nextToken();
+                int day = 0, year = 0, month = 0, time = 0;
+                if (!(event.trim().equals("T"))) {
+                    StringTokenizer stringTokenizer = new StringTokenizer(date.trim());
+                    day = Integer.parseInt(stringTokenizer.nextToken("/").trim());
+                    month = Integer.parseInt(stringTokenizer.nextToken("/").trim());
+                    year = Integer.parseInt(stringTokenizer.nextToken("/ "));
+                    time = Integer.parseInt(stringTokenizer.nextToken("\n").trim());
+                }
                 switch (event.trim()) {
                     case "T":
                         list.add(new Todo (description.trim()));
                         if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
                         break;
                     case "D":
-                        list.add(new Deadline(description.trim(), date.trim().substring(2)));
+                        list.add(new Deadline(description.trim(), day, month, year, time));
                         if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
                         break;
                     case "E":
-                        list.add(new Event(description.trim(), date.trim().substring(2)));
+                        list.add(new Event(description.trim(), day, month, year, time));
                         if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
                         break;
                     default:
