@@ -1,20 +1,17 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Event extends Task{
     protected String at;
-    protected int day;
-    protected int month;
-    protected int year;
-    protected int time;
+    protected LocalDateTime dateTime;
 
-    public Event(String description, int day, int month, int year, int time) {
+    public Event(String description, LocalDateTime dateTime) {
         super(description);
-        this.day = day;
-        this.month = month;
-        this.year = year;
-        this.time = time;
+        this.dateTime = dateTime;
     }
 
     public String date() {
-        at = day + "/" + month + "/" + year + " " + time;
+        at = dateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"));
         return at;
     }
 

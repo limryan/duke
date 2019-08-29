@@ -1,4 +1,7 @@
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -80,12 +83,9 @@ public class Duke {
 
     private static void CreateDeadline(ArrayList<Task> list, boolean markAsDone, String description, String date) {
         try {
-            StringTokenizer stringTokenizer = new StringTokenizer(date.trim().substring(4));
-            int day = Integer.parseInt(stringTokenizer.nextToken("/").trim());
-            int month = Integer.parseInt(stringTokenizer.nextToken("/").trim());
-            int year = Integer.parseInt(stringTokenizer.nextToken("/ "));
-            int time = Integer.parseInt(stringTokenizer.nextToken("\n").trim());
-            list.add(new Deadline(description.trim(), day, month, year, time));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
+            LocalDateTime dateTime = LocalDateTime.parse(date.trim().substring(4), formatter);
+            list.add(new Deadline(description.trim(), dateTime));
             WriteToFile(list);
             System.out.println("    Got it. I've added this task:\n" + "      "
                     + list.get(Task.totalItems-1).toString());
@@ -99,12 +99,9 @@ public class Duke {
 
     private static void CreateEvent(ArrayList<Task> list, boolean markAsDone, String description, String date) {
         try {
-            StringTokenizer stringTokenizer = new StringTokenizer(date.trim().substring(4));
-            int day = Integer.parseInt(stringTokenizer.nextToken("/").trim());
-            int month = Integer.parseInt(stringTokenizer.nextToken("/").trim());
-            int year = Integer.parseInt(stringTokenizer.nextToken("/ "));
-            int time = Integer.parseInt(stringTokenizer.nextToken("\n").trim());
-            list.add(new Event(description.trim(), day, month, year, time));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
+            LocalDateTime dateTime = LocalDateTime.parse(date.trim().substring(4), formatter);
+            list.add(new Event(description.trim(), dateTime));
             WriteToFile(list);
             System.out.println("    Got it. I've added this task:\n" + "      "
                     + list.get(Task.totalItems-1).toString());
@@ -167,13 +164,10 @@ public class Duke {
                 String Done = tokenizer.nextToken();
                 String description = tokenizer.nextToken();
                 String date = tokenizer.nextToken();
-                int day = 0, year = 0, month = 0, time = 0;
+                LocalDateTime dateTime = null;
                 if (!(event.trim().equals("T"))) {
-                    StringTokenizer stringTokenizer = new StringTokenizer(date.trim());
-                    day = Integer.parseInt(stringTokenizer.nextToken("/").trim());
-                    month = Integer.parseInt(stringTokenizer.nextToken("/").trim());
-                    year = Integer.parseInt(stringTokenizer.nextToken("/ "));
-                    time = Integer.parseInt(stringTokenizer.nextToken("\n").trim());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
+                    dateTime = LocalDateTime.parse(date.trim(), formatter);
                 }
                 switch (event.trim()) {
                     case "T":
@@ -181,11 +175,11 @@ public class Duke {
                         if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
                         break;
                     case "D":
-                        list.add(new Deadline(description.trim(), day, month, year, time));
+                        list.add(new Deadline(description.trim(), dateTime));
                         if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
                         break;
                     case "E":
-                        list.add(new Event(description.trim(), day, month, year, time));
+                        list.add(new Event(description.trim(), dateTime));
                         if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
                         break;
                     default:

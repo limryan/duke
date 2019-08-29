@@ -1,21 +1,18 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Deadline extends Task {
 
     protected String by;
-    protected int day;
-    protected int month;
-    protected int year;
-    protected int time;
+    protected LocalDateTime dateTime;
 
-    public Deadline(String description, int day, int month, int year, int time) {
+    public Deadline(String description, LocalDateTime dateTime) {
         super(description);
-        this.day = day;
-        this.month = month;
-        this.year = year;
-        this.time = time;
+        this.dateTime = dateTime;
     }
 
     public String date() {
-        this.by = day + "/" + month + "/" + year + " " + time;
+        this.by = dateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"));
         return by;
     }
 
