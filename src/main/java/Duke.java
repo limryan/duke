@@ -1,5 +1,4 @@
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -59,6 +58,9 @@ public class Duke {
                     break;
                 case "done":
                     MarkDone(list, description);
+                    break;
+                case "delete":
+                    DeleteTask(list, description);
                     break;
                 default:
                     System.out.println("    OOPS!!! I'm sorry, but I don't know what that means :-(");
@@ -127,6 +129,24 @@ public class Duke {
             WriteToFile(list);
             System.out.println("    Nice! I've marked this task as done:");
             System.out.println("      [\u2713] " + list.get(item - 1).description);
+        } catch (NullPointerException | NumberFormatException e) {
+            System.out.println("    OOPS!!! Please enter an item number.");
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("    OOPS!!! Item not found.");
+        } catch (IOException e) {
+            System.out.println("    Error. File not found.");
+        }
+    }
+
+    private static void DeleteTask(ArrayList<Task> list, String description) {
+        try {
+            int item = Integer.parseInt(description.trim());
+            String task = list.get(item-1).toString();
+            list.remove(item-1);
+            Task.totalItems--;
+            WriteToFile(list);
+            System.out.println("    Noted. I've removed this task:\n" + "    " + task);
+            System.out.println("    Now you have " + list.size() + " item(s) in your list.");
         } catch (NullPointerException | NumberFormatException e) {
             System.out.println("    OOPS!!! Please enter an item number.");
         } catch (IndexOutOfBoundsException e) {
