@@ -62,6 +62,9 @@ public class Duke {
                 case "delete":
                     DeleteTask(list, description);
                     break;
+                case "find":
+                    Find(list, description);
+                    break;
                 default:
                     System.out.println("    OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
@@ -153,6 +156,17 @@ public class Duke {
             System.out.println("    OOPS!!! Item not found.");
         } catch (IOException e) {
             System.out.println("    Error. File not found.");
+        }
+    }
+
+    private static void Find (ArrayList<Task> list, String description) {
+        System.out.println("    Here are the matching tasks in your list:");
+        int j = 1;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).description.contains(description.trim())) {
+                System.out.println(j + ". " + list.get(i).toString());
+                j++;
+            }
         }
     }
 
