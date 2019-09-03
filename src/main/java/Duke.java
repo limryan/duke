@@ -6,20 +6,16 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Duke {
-    public static void main(String[] args) {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
-        System.out.println("What can I do for you?");
-        System.out.println("________________________________________");
+    private Ui ui;
 
-        ChatBot();
+    public static void main(String[] args) {
+        new Duke("[project_root]\\data\\duke.txt");
     }
 
-    private static void ChatBot() {
+    private Duke(String filepath) {
+        ui = new Ui();
+        ui.showLogo();
+        ui.showLine();
         boolean exitCondition = false;
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> list = new ArrayList<>();
@@ -38,14 +34,14 @@ public class Duke {
             if (tokenizer.hasMoreTokens()) description = tokenizer.nextToken("/\n");
             if (tokenizer.hasMoreTokens()) date = tokenizer.nextToken("\n");
 
-            System.out.println("________________________________________");
+            ui.showLine();
             switch (command) {
                 case "bye":
                     exitCondition = true;
                     System.out.println("    Bye. Hope to see you again soon!");
                     break;
                 case "list":
-                    PrintList(list);
+                    ui.showList(list);
                     break;
                 case "todo":
                     CreateTodo(list, false, description);
@@ -63,22 +59,20 @@ public class Duke {
                     DeleteTask(list, description);
                     break;
                 case "find":
-                    Find(list, description);
+                    ui.showFind(list, description);
                     break;
                 default:
                     System.out.println("    OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
-            System.out.println("________________________________________");
+            ui.showLine();
         }
     }
 
-    private static void CreateTodo( ArrayList<Task> list, boolean markAsDone, String description) {
+    private void CreateTodo( ArrayList<Task> list, boolean markAsDone, String description) {
         try {
             list.add(new Todo(description.trim()));
             WriteToFile(list);
-            System.out.println("    Got it. I've added this task:\n" + "      "
-                    + list.get(Task.totalItems-1).toString());
-            System.out.println("    Now you have " + Task.totalItems + " task(s) in the list.");
+            ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
         } catch (NullPointerException e) {
             System.out.println("    OOPS!!! The description of a todo cannot be empty.");
         } catch (IOException e) {
@@ -86,15 +80,13 @@ public class Duke {
         }
     }
 
-    private static void CreateDeadline(ArrayList<Task> list, boolean markAsDone, String description, String date) {
+    private void CreateDeadline(ArrayList<Task> list, boolean markAsDone, String description, String date) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
             LocalDateTime dateTime = LocalDateTime.parse(date.trim().substring(4), formatter);
             list.add(new Deadline(description.trim(), dateTime));
             WriteToFile(list);
-            System.out.println("    Got it. I've added this task:\n" + "      "
-                    + list.get(Task.totalItems-1).toString());
-            System.out.println("    Now you have " + Task.totalItems + " task(s) in the list.");
+            ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
         } catch (NullPointerException e) {
             System.out.println("    OOPS!!! The description/date of a deadline cannot be empty.");
         } catch (IOException e) {
@@ -102,15 +94,13 @@ public class Duke {
         }
     }
 
-    private static void CreateEvent(ArrayList<Task> list, boolean markAsDone, String description, String date) {
+    private void CreateEvent(ArrayList<Task> list, boolean markAsDone, String description, String date) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
             LocalDateTime dateTime = LocalDateTime.parse(date.trim().substring(4), formatter);
             list.add(new Event(description.trim(), dateTime));
             WriteToFile(list);
-            System.out.println("    Got it. I've added this task:\n" + "      "
-                    + list.get(Task.totalItems-1).toString());
-            System.out.println("    Now you have " + Task.totalItems + " task(s) in the list.");
+            ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
         } catch (NullPointerException e) {
             System.out.println("    OOPS!!! The description/date of an event cannot be empty.");
         } catch (IOException e) {
@@ -118,20 +108,12 @@ public class Duke {
         }
     }
 
-    private static void PrintList(ArrayList<Task> list) {
-        System.out.println("    Here are the tasks in your list:");
-        for (int i = 0; i < Task.totalItems; i++) {
-            System.out.println("    " + (i + 1) + ". " + list.get(i).toString());
-        }
-    }
-
-    private static void MarkDone(ArrayList<Task>list, String description) {
+    private void MarkDone(ArrayList<Task>list, String description) {
         try {
             int item = Integer.parseInt(description.trim());
             list.get(item - 1).markAsDone();
             WriteToFile(list);
-            System.out.println("    Nice! I've marked this task as done:");
-            System.out.println("      [\u2713] " + list.get(item - 1).description);
+            ui.showDone(list.get(item - 1).description);
         } catch (NullPointerException | NumberFormatException e) {
             System.out.println("    OOPS!!! Please enter an item number.");
         } catch (IndexOutOfBoundsException e) {
@@ -141,32 +123,20 @@ public class Duke {
         }
     }
 
-    private static void DeleteTask(ArrayList<Task> list, String description) {
+    private void DeleteTask(ArrayList<Task> list, String description) {
         try {
             int item = Integer.parseInt(description.trim());
             String task = list.get(item-1).toString();
             list.remove(item-1);
             Task.totalItems--;
             WriteToFile(list);
-            System.out.println("    Noted. I've removed this task:\n" + "    " + task);
-            System.out.println("    Now you have " + list.size() + " item(s) in your list.");
+            ui.showDelete(task, list.size());
         } catch (NullPointerException | NumberFormatException e) {
             System.out.println("    OOPS!!! Please enter an item number.");
         } catch (IndexOutOfBoundsException e) {
             System.out.println("    OOPS!!! Item not found.");
         } catch (IOException e) {
             System.out.println("    Error. File not found.");
-        }
-    }
-
-    private static void Find (ArrayList<Task> list, String description) {
-        System.out.println("    Here are the matching tasks in your list:");
-        int j = 1;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).description.contains(description.trim())) {
-                System.out.println(j + ". " + list.get(i).toString());
-                j++;
-            }
         }
     }
 
@@ -191,7 +161,7 @@ public class Duke {
     private static void LoadFromFile (ArrayList<Task> list) throws IOException{
         File file = new File("C:\\Users\\ryana\\Desktop\\2113_Project\\data\\duke.txt");
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
                 StringTokenizer tokenizer = new StringTokenizer(line, "|");
                 String event = tokenizer.nextToken();
