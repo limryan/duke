@@ -85,8 +85,7 @@ public class Duke {
 
     private void CreateDeadline(ArrayList<Task> list, boolean markAsDone, String description, String date, String filepath) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
-            LocalDateTime dateTime = LocalDateTime.parse(date.trim().substring(4), formatter);
+            LocalDateTime dateTime = Parser.convertDate(description.substring(4));
             list.add(new Deadline(description.trim(), dateTime));
             storage.write(list, filepath);
             ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
@@ -99,8 +98,7 @@ public class Duke {
 
     private void CreateEvent(ArrayList<Task> list, boolean markAsDone, String description, String date, String filepath) {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
-            LocalDateTime dateTime = LocalDateTime.parse(date.trim().substring(4), formatter);
+            LocalDateTime dateTime = Parser.convertDate(date.substring(4));
             list.add(new Event(description.trim(), dateTime));
             storage.write(list, filepath);
             ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
@@ -113,7 +111,7 @@ public class Duke {
 
     private void MarkDone(ArrayList<Task>list, String description, String filepath) {
         try {
-            int item = Integer.parseInt(description.trim());
+            int item = Parser.convertInt(description);
             list.get(item - 1).markAsDone();
             storage.write(list, filepath);
             ui.showDone(list.get(item - 1).description);
@@ -128,7 +126,7 @@ public class Duke {
 
     private void DeleteTask(ArrayList<Task> list, String description, String filepath) {
         try {
-            int item = Integer.parseInt(description.trim());
+            int item = Parser.convertInt(description);
             String task = list.get(item-1).toString();
             list.remove(item-1);
             Task.totalItems--;

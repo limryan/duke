@@ -1,6 +1,5 @@
 import java.io.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -34,8 +33,7 @@ public class Storage {
                 String date = tokenizer.nextToken();
                 LocalDateTime dateTime = null;
                 if (!(event.trim().equals("T"))) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
-                    dateTime = LocalDateTime.parse(date.trim(), formatter);
+                    dateTime = Parser.convertDate(date);
                 }
                 switch (event.trim()) {
                     case "T":
