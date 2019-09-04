@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Ui {
 
-    public void showLogo() {
+    public void showWelcome() {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
                 + "| | | | | | | |/ / _ \\\n"
@@ -22,10 +23,10 @@ public class Ui {
                 + "    Now you have " + totalItems + " task(s) in the list.");
     }
 
-    public void showList(ArrayList<Task> list) {
+    public void showList(TaskList tasks) {
         System.out.println("    Here are the tasks in your list:");
         for (int i = 0; i < Task.totalItems; i++) {
-            System.out.println("    " + (i + 1) + ". " + list.get(i).toString());
+            System.out.println("    " + (i+1) + ". " + tasks.get(i));
         }
     }
 
@@ -39,14 +40,19 @@ public class Ui {
         System.out.println("      [\u2713] " + task);
     }
 
-    public void showFind(ArrayList<Task> list, String query) {
-        System.out.println("    Here are the matching tasks in your list:");
-        int j = 1;
-        for (Task task : list) {
-            if (task.description.contains(query.trim())) {
-                System.out.println(j + ". " + task.toString());
-                j++;
+    public void showFind(ArrayList<String> results) {
+        try {
+            System.out.println("    Here are the matching tasks in your list:");
+            for (String string : results) {
+                System.out.println(string);
             }
+        } catch (NullPointerException e) {
+            System.out.println("    No results found. Try another keyword.");
         }
+    }
+
+    public String read() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
     }
 }

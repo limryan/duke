@@ -11,28 +11,31 @@ import java.util.StringTokenizer;
 public class Duke {
     private Ui ui;
     private Storage storage;
+    private TaskList tasks;
 
     public static void main(String[] args) {
-        new Duke("C:\\Users\\ryana\\Desktop\\2113_Project\\data\\duke.txt");
+        new Duke("C:\\Users\\ryana\\Desktop\\2113_Project\\data\\duke.txt").run();
     }
 
-    private Duke(String filepath) {
+    public Duke (String filePath) {
         ui = new Ui();
-        storage = new Storage();
-        ui.showLogo();
-        ui.showLine();
-        boolean exitCondition = false;
-        Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> list = new ArrayList<>();
+        storage = new Storage(filePath);
         try {
-            storage.load(list, filepath);
+            tasks = new TaskList(storage.load());
         } catch (IOException e) {
-            System.out.println("    Error in loading from file.");
+            e.printStackTrace();
+            tasks = new TaskList();
         }
+    }
 
-        while (!exitCondition) {
-            String string = scanner.nextLine();
-            StringTokenizer tokenizer = new StringTokenizer(string);
+    private void run() {
+        ui.showWelcome();
+        ui.showLine();
+        boolean isExit = false;
+
+        while (!isExit) {
+            String fullCommand = ui.read();
+            StringTokenizer tokenizer = new StringTokenizer(fullCommand);
             String command = tokenizer.nextToken();
             String description = null;
             String date = null;
@@ -42,29 +45,29 @@ public class Duke {
             ui.showLine();
             switch (command) {
                 case "bye":
-                    exitCondition = true;
+                    isExit = true;
                     System.out.println("    Bye. Hope to see you again soon!");
                     break;
                 case "list":
-                    ui.showList(list);
+                    ui.showList(tasks);
                     break;
                 case "todo":
-                    CreateTodo(list, false, description, filepath);
+                    CreateTodo(description);
                     break;
                 case "deadline":
-                    CreateDeadline(list, false, description, date, filepath);
+                    CreateDeadline(description, date);
                     break;
                 case "event":
-                    CreateEvent(list, false, description, date, filepath);
+                    CreateEvent(description, date);
                     break;
                 case "done":
-                    MarkDone(list, description, filepath);
+                    MarkDone(description);
                     break;
                 case "delete":
-                    DeleteTask(list, description, filepath);
+                    DeleteTask(description);
                     break;
                 case "find":
-                    ui.showFind(list, description);
+                    ui.showFind(tasks.find(description));
                     break;
                 default:
                     System.out.println("    OOPS!!! I'm sorry, but I don't know what that means :-(");
@@ -73,11 +76,11 @@ public class Duke {
         }
     }
 
-    private void CreateTodo( ArrayList<Task> list, boolean markAsDone, String description, String filepath) {
+    private void CreateTodo(String description) {
         try {
-            list.add(new Todo(description.trim()));
-            storage.write(list, filepath);
-            ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
+            tasks.addTodo(description.trim());
+            storage.write(tasks);
+            ui.showCreateTask(tasks.get(Task.totalItems-1), Task.totalItems);
         } catch (NullPointerException e) {
             System.out.println("    OOPS!!! The description of a todo cannot be empty.");
         } catch (IOException e) {
@@ -85,12 +88,12 @@ public class Duke {
         }
     }
 
-    private void CreateDeadline(ArrayList<Task> list, boolean markAsDone, String description, String date, String filepath) {
+    private void CreateDeadline(String description, String date) {
         try {
             LocalDateTime dateTime = Parser.convertDate(date.substring(4));
-            list.add(new Deadline(description.trim(), dateTime));
-            storage.write(list, filepath);
-            ui.showCreateTask(list.get(Task.totalItems - 1).toString(), Task.totalItems);
+            tasks.addDeadline(description, dateTime);
+            storage.write(tasks);
+            ui.showCreateTask(tasks.get(Task.totalItems - 1), Task.totalItems);
         } catch (DateTimeException e) {
             System.out.println("    Please enter date and time in the format: dd/mm/yyyy HHmm.");
         } catch (NullPointerException e) {
@@ -100,12 +103,12 @@ public class Duke {
         }
     }
 
-    private void CreateEvent(ArrayList<Task> list, boolean markAsDone, String description, String date, String filepath) {
+    private void CreateEvent(String description, String date) {
         try {
             LocalDateTime dateTime = Parser.convertDate(date.substring(4));
-            list.add(new Event(description.trim(), dateTime));
-            storage.write(list, filepath);
-            ui.showCreateTask(list.get(Task.totalItems - 1).toString(), Task.totalItems);
+            tasks.addEvent(description, dateTime);
+            storage.write(tasks);
+            ui.showCreateTask(tasks.get(Task.totalItems - 1), Task.totalItems);
         } catch (DateTimeException e) {
             System.out.println("    Please enter date & time in the format: dd/mm/yyyy HHmm.");
         } catch (NullPointerException e) {
@@ -115,12 +118,12 @@ public class Duke {
         }
     }
 
-    private void MarkDone(ArrayList<Task>list, String description, String filepath) {
+    private void MarkDone(String description) {
         try {
             int item = Parser.convertInt(description);
-            list.get(item - 1).markAsDone();
-            storage.write(list, filepath);
-            ui.showDone(list.get(item - 1).description);
+            tasks.markDone(item-1);
+            storage.write(tasks);
+            ui.showDone(tasks.getDescription(item-1));
         } catch (NullPointerException | NumberFormatException e) {
             System.out.println("    OOPS!!! Please enter an item number.");
         } catch (IndexOutOfBoundsException e) {
@@ -130,14 +133,14 @@ public class Duke {
         }
     }
 
-    private void DeleteTask(ArrayList<Task> list, String description, String filepath) {
+    private void DeleteTask(String description) {
         try {
             int item = Parser.convertInt(description);
-            String task = list.get(item-1).toString();
-            list.remove(item-1);
+            String task = tasks.get(item-1);
+            tasks.removeTask(item-1);
             Task.totalItems--;
-            storage.write(list, filepath);
-            ui.showDelete(task, list.size());
+            storage.write(tasks);
+            ui.showDelete(task, tasks.getSize());
         } catch (NullPointerException | NumberFormatException e) {
             System.out.println("    OOPS!!! Please enter an item number.");
         } catch (IndexOutOfBoundsException e) {

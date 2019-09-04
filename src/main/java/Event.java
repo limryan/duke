@@ -19,4 +19,9 @@ public class Event extends Task{
     public String toString() {
         return "[E][" + super.getStatusIcon() + "] " + super.description + " (at: " + date() + ")";
     }
+
+    @Override
+    public String getType() {
+        return "E";
+    }
 }

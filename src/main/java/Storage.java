@@ -5,26 +5,33 @@ import java.util.StringTokenizer;
 
 public class Storage {
 
-    public void write(ArrayList<Task> list, String filePath) throws IOException {
-        FileWriter fileWriter = new FileWriter(filePath);
+    private String filepath;
+
+    public Storage (String filepath) {
+        this.filepath = filepath;
+    }
+
+    public void write(TaskList tasks) throws IOException {
+        FileWriter fileWriter = new FileWriter(filepath);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         for (int i = 0; i < Task.totalItems; i++) {
-            if (list.get(i) instanceof Todo) {
-                bufferedWriter.write("T | " + list.get(i).getStatusIcon() + " | " + list.get(i).description + " | \n");
-            } else if (list.get(i) instanceof Deadline) {
-                bufferedWriter.write("D | " + list.get(i).getStatusIcon() + " | " + list.get(i).description + " | "
-                        + list.get(i).date() + "\n");
+            if (tasks.getType(i).equals("T")) {
+                bufferedWriter.write("T | " + tasks.getStatusIcon(i) + " | " + tasks.getDescription(i) + " | \n");
+            } else if (tasks.getType(i).equals("D")) {
+                bufferedWriter.write("D | " + tasks.getStatusIcon(i) + " | " + tasks.getDescription(i) + " | "
+                        + tasks.getDate(i) + "\n");
             } else {
-                bufferedWriter.write("E | " + list.get(i).getStatusIcon() + " | " + list.get(i).description + " | "
-                        + list.get(i).date() + "\n");
+                bufferedWriter.write("E | " + tasks.getStatusIcon(i) + " | " + tasks.getDescription(i) + " | "
+                        + tasks.getDate(i) + "\n");
             }
         }
         bufferedWriter.close();
     }
 
-    public void load(ArrayList<Task> list, String filepath) throws IOException {
+    public ArrayList<Task> load() throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             String line;
+            ArrayList<Task> list = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 StringTokenizer tokenizer = new StringTokenizer(line, "|");
                 String event = tokenizer.nextToken();
@@ -52,6 +59,7 @@ public class Storage {
                         System.out.println("    ERROR " + event);
                 }
             }
+            return list;
         }
     }
 }
