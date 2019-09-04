@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.io.*;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -85,10 +87,12 @@ public class Duke {
 
     private void CreateDeadline(ArrayList<Task> list, boolean markAsDone, String description, String date, String filepath) {
         try {
-            LocalDateTime dateTime = Parser.convertDate(description.substring(4));
+            LocalDateTime dateTime = Parser.convertDate(date.substring(4));
             list.add(new Deadline(description.trim(), dateTime));
             storage.write(list, filepath);
-            ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
+            ui.showCreateTask(list.get(Task.totalItems - 1).toString(), Task.totalItems);
+        } catch (DateTimeException e) {
+            System.out.println("    Please enter date and time in the format: dd/mm/yyyy HHmm.");
         } catch (NullPointerException e) {
             System.out.println("    OOPS!!! The description/date of a deadline cannot be empty.");
         } catch (IOException e) {
@@ -101,7 +105,9 @@ public class Duke {
             LocalDateTime dateTime = Parser.convertDate(date.substring(4));
             list.add(new Event(description.trim(), dateTime));
             storage.write(list, filepath);
-            ui.showCreateTask(list.get(Task.totalItems-1).toString(), Task.totalItems);
+            ui.showCreateTask(list.get(Task.totalItems - 1).toString(), Task.totalItems);
+        } catch (DateTimeException e) {
+            System.out.println("    Please enter date & time in the format: dd/mm/yyyy HHmm.");
         } catch (NullPointerException e) {
             System.out.println("    OOPS!!! The description/date of an event cannot be empty.");
         } catch (IOException e) {
