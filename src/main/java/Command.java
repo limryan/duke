@@ -42,7 +42,7 @@ public class Command {
                 ui.showFind(tasks.find(description));
                 break;
             default:
-                System.out.println("    OOPS!!! I'm sorry, but I don't know what that means :-(");
+                throw new DukeException("    OOPS!!! I'm sorry, but I don't know what that means :-(");
         }
     }
 
@@ -58,7 +58,8 @@ public class Command {
         }
     }
 
-    private void CreateDeadline(String description, String date, TaskList tasks, Ui ui, Storage storage) {
+    private void CreateDeadline(String description, String date, TaskList tasks, Ui ui, Storage storage)
+            throws DukeException{
         try {
             LocalDateTime dateTime = Parser.convertDate(date.substring(4));
             tasks.addDeadline(description, dateTime);
@@ -70,10 +71,13 @@ public class Command {
             System.out.println("    OOPS!!! The description/date of a deadline cannot be empty.");
         } catch (IOException e) {
             System.out.println("    Error in writing to file.");
+        } catch (Exception e) {
+            throw new DukeException("Unknown error");
         }
     }
 
-    private void CreateEvent(String description, String date, TaskList tasks, Ui ui, Storage storage) {
+    private void CreateEvent(String description, String date, TaskList tasks, Ui ui, Storage storage)
+            throws DukeException {
         try {
             LocalDateTime dateTime = Parser.convertDate(date.substring(4));
             tasks.addEvent(description, dateTime);
@@ -85,10 +89,13 @@ public class Command {
             System.out.println("    OOPS!!! The description/date of an event cannot be empty.");
         } catch (IOException e) {
             System.out.println("    Error in writing to file.");
+        } catch (Exception e) {
+            throw new DukeException("Unknown error");
         }
     }
 
-    private void MarkDone(String description, TaskList tasks, Ui ui, Storage storage) {
+    private void MarkDone(String description, TaskList tasks, Ui ui, Storage storage)
+            throws DukeException {
         try {
             int item = Parser.convertInt(description);
             tasks.markDone(item-1);
@@ -100,15 +107,17 @@ public class Command {
             System.out.println("    OOPS!!! Item not found.");
         } catch (IOException e) {
             System.out.println("    Error. File not found.");
+        } catch (Exception e) {
+            throw new DukeException("Unknown error");
         }
     }
 
-    private void DeleteTask(String description, TaskList tasks, Ui ui, Storage storage) {
+    private void DeleteTask(String description, TaskList tasks, Ui ui, Storage storage)
+            throws DukeException {
         try {
-            int item = Parser.convertInt(description);
-            String task = tasks.get(item-1);
-            tasks.removeTask(item-1);
-            Task.totalItems--;
+            int item = Parser.convertInt(description)-1;
+            String task = tasks.get(item);
+            tasks.removeTask(item);
             storage.write(tasks);
             ui.showDelete(task, tasks.getSize());
         } catch (NullPointerException | NumberFormatException e) {
@@ -117,6 +126,8 @@ public class Command {
             System.out.println("    OOPS!!! Item not found.");
         } catch (IOException e) {
             System.out.println("    Error. File not found.");
+        } catch (Exception e) {
+            throw new DukeException("Unknown error");
         }
     }
 

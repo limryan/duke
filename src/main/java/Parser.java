@@ -14,7 +14,7 @@ public class Parser {
         return new Command(type, description, date);
     }
 
-    public static LocalDateTime convertDate(String string) {
+    public static LocalDateTime convertDate(String string) throws NumberFormatException{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
         return LocalDateTime.parse(string.trim(), formatter);
     }

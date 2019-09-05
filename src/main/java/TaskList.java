@@ -55,6 +55,7 @@ public class TaskList {
 
     public void removeTask(int itemNumber) {
         taskList.remove(itemNumber);
+        Task.totalItems--;
     }
 
     public void addEvent(String description, LocalDateTime dateTime) {
