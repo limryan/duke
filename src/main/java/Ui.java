@@ -1,7 +1,15 @@
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Ui {
+    private Scanner scanner;
+//    private PrintStream printer;
+
+    public Ui() {
+        this.scanner = new Scanner(System.in);
+//        this.printer =  new PrintStream(System.out, true, StandardCharsets.UTF_8);
+    }
 
     public void showWelcome() {
         String logo = " ____        _        \n"
@@ -44,7 +52,7 @@ public class Ui {
         try {
             System.out.println("    Here are the matching tasks in your list:");
             for (String string : results) {
-                System.out.println(string);
+                System.out.println("    " + string);
             }
         } catch (NullPointerException e) {
             System.out.println("    No results found. Try another keyword.");
@@ -52,7 +60,6 @@ public class Ui {
     }
 
     public String read() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+            return scanner.nextLine();
     }
 }

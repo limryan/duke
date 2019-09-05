@@ -1,0 +1,84 @@
+Hello from
+ ____        _        
+|  _ \ _   _| | _____ 
+| | | | | | | |/ / _ \
+| |_| | |_| |   <  __/
+|____/ \__,_|_|\_\___|
+
+What can I do for you?
+________________________________________
+________________________________________
+    Here are the tasks in your list:
+________________________________________
+________________________________________
+    Got it. I've added this task:
+      [T][?] homework
+    Now you have 1 task(s) in the list.
+________________________________________
+________________________________________
+    Got it. I've added this task:
+      [D][?] report (by: 20/09/2019 1400)
+    Now you have 2 task(s) in the list.
+________________________________________
+________________________________________
+    Got it. I've added this task:
+      [D][?] readings (by: 30/09/2019 2359)
+    Now you have 3 task(s) in the list.
+________________________________________
+________________________________________
+    Here are the tasks in your list:
+    1. [T][?] homework
+    2. [D][?] report (by: 20/09/2019 1400)
+    3. [D][?] readings (by: 30/09/2019 2359)
+________________________________________
+________________________________________
+    OOPS!!! I'm sorry, but I don't know what that means :-(
+________________________________________
+________________________________________
+    OOPS!!! The description/date of a deadline cannot be empty.
+________________________________________
+________________________________________
+    Got it. I've added this task:
+      [E][?] cs2113t meeting (at: 21/09/2019 1200)
+    Now you have 4 task(s) in the list.
+________________________________________
+________________________________________
+    OOPS!!! The description/date of an event cannot be empty.
+________________________________________
+________________________________________
+    Here are the matching tasks in your list:
+    1. [E][?] cs2113t meeting (at: 21/09/2019 1200)
+________________________________________
+________________________________________
+    Here are the matching tasks in your list:
+    1. [T][?] homework
+    2. [D][?] report (by: 20/09/2019 1400)
+    3. [D][?] readings (by: 30/09/2019 2359)
+    4. [E][?] cs2113t meeting (at: 21/09/2019 1200)
+________________________________________
+________________________________________
+    Noted. I've removed this task:
+    [D][?] report (by: 20/09/2019 1400)
+    Now you have 3 item(s) in your list.
+________________________________________
+________________________________________
+    Noted. I've removed this task:
+    [E][?] cs2113t meeting (at: 21/09/2019 1200)
+    Now you have 2 item(s) in your list.
+________________________________________
+________________________________________
+    OOPS!!! Item not found.
+________________________________________
+________________________________________
+    Noted. I've removed this task:
+    [T][?] homework
+    Now you have 1 item(s) in your list.
+________________________________________
+________________________________________
+    Noted. I've removed this task:
+    [D][?] readings (by: 30/09/2019 2359)
+    Now you have 0 item(s) in your list.
+________________________________________
+________________________________________
+    Bye. Hope to see you again soon!
+________________________________________

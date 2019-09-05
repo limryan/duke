@@ -1,0 +1,17 @@
+list
+todo homework
+deadline report /by 20/09/2019 1400
+deadline readings /by 31/09/2019 2359
+list
+blah
+deadline
+event cs2113t meeting /at 21/09/2019 1200
+event cs2101 talk
+find meet
+find e
+delete 2
+delete 3
+delete 3
+delete 1
+delete 1
+bye
