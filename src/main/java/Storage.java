@@ -3,14 +3,27 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+/**
+ * Class the represents the aspects of saving and reading from file
+ */
 public class Storage {
 
     private String filepath;
 
+    /**
+     * Constructor to instantiate the storage object
+     * @param filepath string that specifies which file to use
+     */
     public Storage(String filepath) {
         this.filepath = filepath;
     }
 
+    /**
+     * Transfers the items/tasks in a task list into a text file and saves it.
+     *
+     * @param tasks the TaskList that contains all tasks
+     * @throws IOException when file cannot be read
+     */
     public void write(TaskList tasks) throws IOException {
         FileWriter fileWriter = new FileWriter(filepath);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -28,6 +41,13 @@ public class Storage {
         bufferedWriter.close();
     }
 
+    /**
+     * Method that opens a text file, reads it and adds the information into a
+     * new TaskList
+     *
+     * @return TaskList with the tasks in the text file
+     * @throws IOException when file cannot be found/read
+     */
     public ArrayList<Task> load() throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             String line;
