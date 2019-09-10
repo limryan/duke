@@ -13,12 +13,10 @@ public class TaskList {
         this.taskList = taskList;
     }
 
+    public int getSize() { return taskList.size(); }
+
     public String get(int itemNumber) {
         return taskList.get(itemNumber).toString();
-    }
-
-    public int getSize() {
-        return taskList.size();
     }
 
     public String getType(int itemNumber) {
@@ -66,7 +64,7 @@ public class TaskList {
         taskList.add(new Deadline(description.trim(), dateTime));
     }
 
-    public void addTodo (String description) {
+    public void addTodo(String description) {
         taskList.add(new Todo(description.trim()));
     }
 }

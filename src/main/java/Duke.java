@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.IOException;
 
 public class Duke {
     private Ui ui;
@@ -9,7 +9,7 @@ public class Duke {
         new Duke("C:\\Users\\ryana\\Desktop\\2113_Project\\data\\duke.txt").run();
     }
 
-    public Duke (String filePath) {
+    private Duke(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
         try {
@@ -39,4 +39,13 @@ public class Duke {
             }
         }
     }
+
+//    @Override
+//    public void start(Stage stage) {
+//        Label helloWorld = new Label("Hello World!"); // Creating a new Label control
+//        Scene scene = new Scene(helloWorld); // Setting the scene to be our Label
+//
+//        stage.setScene(scene); // Setting the stage to show our screen
+//        stage.show(); // Render the stage.
+//    }
 }

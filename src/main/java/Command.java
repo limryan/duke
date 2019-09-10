@@ -8,13 +8,13 @@ public class Command {
     private String date;
     private boolean isExit = false;
 
-    public Command (String type, String description, String date) {
+    public Command(String type, String description, String date) {
         this.type = type;
         this.description = description;
         this.date = date;
     }
 
-    public void execute (TaskList tasks, Ui ui, Storage storage) throws DukeException{
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         switch (type) {
             case "bye":
                 isExit = true;
@@ -50,7 +50,7 @@ public class Command {
         try {
             tasks.addTodo(description.trim());
             storage.write(tasks);
-            ui.showCreateTask(tasks.get(Task.totalItems-1), Task.totalItems);
+            ui.showCreateTask(tasks.get(Task.totalItems - 1), Task.totalItems);
         } catch (NullPointerException e) {
             System.out.println("    OOPS!!! The description of a todo cannot be empty.");
         } catch (IOException e) {
@@ -59,7 +59,7 @@ public class Command {
     }
 
     private void CreateDeadline(String description, String date, TaskList tasks, Ui ui, Storage storage)
-            throws DukeException{
+            throws DukeException {
         try {
             LocalDateTime dateTime = Parser.convertDate(date.substring(4));
             tasks.addDeadline(description, dateTime);
@@ -98,9 +98,9 @@ public class Command {
             throws DukeException {
         try {
             int item = Parser.convertInt(description);
-            tasks.markDone(item-1);
+            tasks.markDone(item - 1);
             storage.write(tasks);
-            ui.showDone(tasks.getDescription(item-1));
+            ui.showDone(tasks.getDescription(item - 1));
         } catch (NullPointerException | NumberFormatException e) {
             System.out.println("    OOPS!!! Please enter an item number.");
         } catch (IndexOutOfBoundsException e) {
@@ -115,7 +115,7 @@ public class Command {
     private void DeleteTask(String description, TaskList tasks, Ui ui, Storage storage)
             throws DukeException {
         try {
-            int item = Parser.convertInt(description)-1;
+            int item = Parser.convertInt(description) - 1;
             String task = tasks.get(item);
             tasks.removeTask(item);
             storage.write(tasks);

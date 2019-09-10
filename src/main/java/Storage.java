@@ -7,7 +7,7 @@ public class Storage {
 
     private String filepath;
 
-    public Storage (String filepath) {
+    public Storage(String filepath) {
         this.filepath = filepath;
     }
 
@@ -44,16 +44,16 @@ public class Storage {
                 }
                 switch (event.trim()) {
                     case "T":
-                        list.add(new Todo (description.trim()));
-                        if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
+                        list.add(new Todo(description.trim()));
+                        if (Done.trim().equals("\u2713")) list.get(Task.totalItems - 1).markAsDone();
                         break;
                     case "D":
                         list.add(new Deadline(description.trim(), dateTime));
-                        if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
+                        if (Done.trim().equals("\u2713")) list.get(Task.totalItems - 1).markAsDone();
                         break;
                     case "E":
                         list.add(new Event(description.trim(), dateTime));
-                        if (Done.trim().equals("\u2713")) list.get(Task.totalItems-1).markAsDone();
+                        if (Done.trim().equals("\u2713")) list.get(Task.totalItems - 1).markAsDone();
                         break;
                     default:
                         System.out.println("    ERROR " + event);

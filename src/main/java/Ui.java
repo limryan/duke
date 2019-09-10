@@ -1,14 +1,11 @@
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Ui {
     private Scanner scanner;
-//    private PrintStream printer;
 
     public Ui() {
         this.scanner = new Scanner(System.in);
-//        this.printer =  new PrintStream(System.out, true, StandardCharsets.UTF_8);
     }
 
     public void showWelcome() {
@@ -34,7 +31,7 @@ public class Ui {
     public void showList(TaskList tasks) {
         System.out.println("    Here are the tasks in your list:");
         for (int i = 0; i < Task.totalItems; i++) {
-            System.out.println("    " + (i+1) + ". " + tasks.get(i));
+            System.out.println("    " + (i + 1) + ". " + tasks.get(i));
         }
     }
 
@@ -60,6 +57,6 @@ public class Ui {
     }
 
     public String read() {
-            return scanner.nextLine();
+        return scanner.nextLine();
     }
 }

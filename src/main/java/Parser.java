@@ -19,12 +19,12 @@ public class Parser {
         }
     }
 
-    public static LocalDateTime convertDate(String string) throws NumberFormatException{
+    public static LocalDateTime convertDate(String string) throws NumberFormatException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
         return LocalDateTime.parse(string.trim(), formatter);
     }
 
-    public static int convertInt(String string) throws NumberFormatException{
+    public static int convertInt(String string) throws NumberFormatException {
         return Integer.parseInt(string.trim());
     }
 }
